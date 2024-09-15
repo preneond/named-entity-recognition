@@ -1,0 +1,50 @@
+[tool.poetry]
+name = "named_entity_recognition"
+version = "0.1.0"
+description = "Named Entity Recognition (NER) model"
+authors = ["Ondrej Prenek <ondra.prenek@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [
+    {include = "named_entity_recognition", from = "src"}
+]
+include = ["py.typed"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.114.2"
+uvicorn = "^0.30.6"
+pydantic = "^2.9.1"
+joblib = "^1.4.2"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+pytest-mypy = "^0.10.3"
+pre-commit = "^3.6.1"
+notebook = {version = "^7.2.2", extras = ["dev"]}
+pandas = {version = "^2.2.2", extras = ["dev"]}
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = """
+    --verbose
+    --cov=named_entity_recognition --cov-report html
+    --capture=sys
+    --strict-markers
+    --mypy
+    --strict
+    """
+
+[tool.mypy]
+strict = true
+mypy_path = "src"
+
+[tool.ruff]
+lint.select = ["E", "F", "UP", "B", "W", "N", "C4", "SIM", "PTH", "TD", "FIX", "R"]
+lint.extend-select = ["I"] # Sort imports
+force-exclude = true # Recommended for pre-commit (https://docs.astral.sh/ruff/settings/#force-exclude)
+target-version = "py311"

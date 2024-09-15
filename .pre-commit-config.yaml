@@ -1,0 +1,26 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.2
+    hooks:
+      - id: ruff
+        name: ruff-isort
+        args: [ --fix, --select, I]
+      - id: ruff-format
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.2
+    hooks:
+      - id: ruff
+  - repo: local
+    hooks:
+      - id: fixme
+        name: fixme
+        entry: "(?i)# fixme" # Ignore case
+        language: pygrep
+        types: [python]

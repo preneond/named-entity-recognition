@@ -1,0 +1,13 @@
+# server environment configuration
+uvicorn:
+  host: 0.0.0.0
+  port: 8000
+  log_level: info
+  reload: false
+api_config:
+  title: Simple FastAPI Server
+  description: API Documentation for Simple FastAPI Server
+  version: v1
+  docs_url: /docs
+
+ner_model_path: /static/model.pkl
