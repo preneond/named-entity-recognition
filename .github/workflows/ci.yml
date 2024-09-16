@@ -54,7 +54,7 @@ jobs:
 
       - name: Run pytest
         run: |
-          poetry run pytest
+          poetry run pytest tests
 
 #  build:
 #    name: Build Docker Image
