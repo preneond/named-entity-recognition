@@ -3,8 +3,10 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+import spacy
 import yaml
 from pydantic import BaseModel
+from spacy.language import Language
 
 
 class LogLevels(StrEnum):
@@ -41,12 +43,23 @@ class Settings(BaseModel):
     ner_model_path: str
 
 
-def load_from_yaml() -> Any:
+def load_settings_from_yaml() -> Any:
     with (Path(__file__).parents[2] / "app_settings.yaml").open() as fp:
         return yaml.safe_load(fp)
 
 
 @lru_cache
 def get_settings() -> Settings:
-    yaml_config = load_from_yaml()
+    """
+    Load the settings from the yaml file and return them as a Settings object.
+    """
+    yaml_config = load_settings_from_yaml()
     return Settings(**yaml_config)
+
+
+@lru_cache
+def get_ner_model() -> Language:
+    """
+    Load the pretrained NER model from the path specified in the settings.
+    """
+    return spacy.load(Path.cwd() / get_settings().ner_model_path)

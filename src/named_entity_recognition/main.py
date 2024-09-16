@@ -1,34 +1,35 @@
 import logging
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from pathlib import Path
 
-import spacy
 import uvicorn
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
 from starlette import status
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
-from starlette.responses import HTMLResponse
 
-from named_entity_recognition.config import get_settings
+from named_entity_recognition.api_router import router
+from named_entity_recognition.config import get_ner_model, get_settings
 from named_entity_recognition.responses import error_response
 
 
-class ProductDescription(BaseModel):
-    title: str
+def _setup_logging() -> None:
+    logging.basicConfig(
+        level=get_settings().uvicorn.log_level.value.upper(),
+        format="%(asctime)s | %(levelname)-8s | %(module)s:%(funcName)s:%(lineno)d - %(message)s",  # noqa: E501
+    )
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> None:
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # Load the model once during startup
     # global ner_model
-    logging.info("Loading the model...")
-    app.state.model = spacy.load(Path.cwd() / settings.ner_model_path)
-    logging.info("Model loaded successfully!")
-    # Yield control to the application
+    _setup_logging()
+    logging.info("Loading the NER model...")
+    app.state.model = get_ner_model()
+    logging.info("NER nodel loaded successfully!")
     yield
 
 
@@ -52,45 +53,11 @@ app.add_middleware(
 @app.exception_handler(RequestValidationError)
 @app.exception_handler(Exception)
 async def exception_handler(request: Request, exc: Exception) -> JSONResponse:
-    logger = request.app.state.logger
-    logger.error(f"{exc}")
+    logging.error(f"{exc}")
     return error_response(errors=str(exc), status_code=status.HTTP_400_BAD_REQUEST)
 
 
-class ExtractedProductInformation(BaseModel):
-    brand: str | None = None
-    storage_capacity: str | None = None
-    color: str | None = None
-
-
-@app.post("/extract", response_class=HTMLResponse)
-async def extract(request: Request, description: ProductDescription) -> JSONResponse:
-    """
-    Uses the NER model to extract information from the product description.
-    :param description: The product description.
-    :return: The recognized brands, storage capacities, and colors.
-    """
-    model = request.app.state.model
-
-    # Apply the NER model on the input description
-    doc = model(description.title)
-    # Initialize empty variables for brand, storage capacity, and color
-    brand, storage_capacity, color = None, None, None
-    # Extract entities from the doc and categorize them
-    for ent in doc.ents:
-        if ent.label_ == "Brand":
-            brand = ent.text
-        elif ent.label_ == "Storage":
-            storage_capacity = ent.text
-        elif ent.label_ == "Color":
-            color = ent.text
-    # Create the response with the extracted information
-    extracted_info = ExtractedProductInformation(
-        brand=brand, storage_capacity=storage_capacity, color=color
-    )
-    # Return the result as a JSON response
-    return JSONResponse({"success": True, "data": extracted_info.model_dump()})
-
+app.include_router(router)
 
 if __name__ == "__main__":
     settings = get_settings()

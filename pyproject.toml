@@ -18,6 +18,7 @@ pydantic = "^2.9.1"
 joblib = "^1.4.2"
 spacy = "^3.7.6"
 numpy = "1.26.4"
+loguru = "^0.7.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
@@ -26,6 +27,7 @@ pre-commit = "^3.6.1"
 notebook = {version = "^7.2.2", extras = ["dev"]}
 pandas = {version = "^2.2.2", extras = ["dev"]}
 tqdm = {version = "^4.66.5"}
+types-pyyaml = "^6.0.12.20240808"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -35,7 +37,6 @@ build-backend = "poetry.core.masonry.api"
 minversion = "6.0"
 addopts = """
     --verbose
-    --cov=named_entity_recognition --cov-report html
     --capture=sys
     --strict-markers
     --mypy
@@ -45,9 +46,10 @@ addopts = """
 [tool.mypy]
 strict = true
 mypy_path = "src"
+exclude = 'tests/.*__init__\.py' # Exclude __init__.py files from test dir
 
 [tool.ruff]
 lint.select = ["E", "F", "UP", "B", "W", "N", "C4", "SIM", "PTH", "TD", "FIX", "R"]
 lint.extend-select = ["I"] # Sort imports
 force-exclude = true # Recommended for pre-commit (https://docs.astral.sh/ruff/settings/#force-exclude)
-target-version = "py311"
+target-version = "py312"
