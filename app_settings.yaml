@@ -10,4 +10,4 @@ api_config:
   version: v1
   docs_url: /docs
 
-ner_model_path: /static/model.pkl
+ner_model_path: static/ner_model_de

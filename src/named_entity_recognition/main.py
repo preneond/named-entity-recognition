@@ -1,6 +1,8 @@
 import logging
 from contextlib import asynccontextmanager
+from pathlib import Path
 
+import spacy
 import uvicorn
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
@@ -14,19 +16,17 @@ from starlette.responses import HTMLResponse
 from named_entity_recognition.config import get_settings
 from named_entity_recognition.responses import error_response
 
-ner_model = None
-
 
 class ProductDescription(BaseModel):
     title: str
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> None:
     # Load the model once during startup
     # global ner_model
     logging.info("Loading the model...")
-    # ner_model = joblib.load(settings.ner_model_path)
+    app.state.model = spacy.load(Path.cwd() / settings.ner_model_path)
     logging.info("Model loaded successfully!")
     # Yield control to the application
     yield
@@ -57,14 +57,39 @@ async def exception_handler(request: Request, exc: Exception) -> JSONResponse:
     return error_response(errors=str(exc), status_code=status.HTTP_400_BAD_REQUEST)
 
 
+class ExtractedProductInformation(BaseModel):
+    brand: str | None = None
+    storage_capacity: str | None = None
+    color: str | None = None
+
+
 @app.post("/extract", response_class=HTMLResponse)
-async def extract(description: ProductDescription) -> JSONResponse:
+async def extract(request: Request, description: ProductDescription) -> JSONResponse:
     """
-    Uses the NER model to extract information from the product description
+    Uses the NER model to extract information from the product description.
     :param description: The product description.
     :return: The recognized brands, storage capacities, and colors.
     """
-    return JSONResponse({"success": True})
+    model = request.app.state.model
+
+    # Apply the NER model on the input description
+    doc = model(description.title)
+    # Initialize empty variables for brand, storage capacity, and color
+    brand, storage_capacity, color = None, None, None
+    # Extract entities from the doc and categorize them
+    for ent in doc.ents:
+        if ent.label_ == "Brand":
+            brand = ent.text
+        elif ent.label_ == "Storage":
+            storage_capacity = ent.text
+        elif ent.label_ == "Color":
+            color = ent.text
+    # Create the response with the extracted information
+    extracted_info = ExtractedProductInformation(
+        brand=brand, storage_capacity=storage_capacity, color=color
+    )
+    # Return the result as a JSON response
+    return JSONResponse({"success": True, "data": extracted_info.model_dump()})
 
 
 if __name__ == "__main__":
