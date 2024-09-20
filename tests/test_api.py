@@ -13,6 +13,7 @@ def client() -> httpx.Client:
     return client
 
 
+@pytest.mark.skip_ci
 def test_extract_valid(client: httpx.Client) -> None:
     """
     Test the /extract endpoint with valid input.
@@ -33,6 +34,7 @@ def test_extract_valid(client: httpx.Client) -> None:
     assert ["brand", "storageCapacity", "color"] == list(response_data["data"].keys())
 
 
+@pytest.mark.skip_ci
 def test_extract_invalid(client: httpx.Client) -> None:
     """
     Test the /extract endpoint with invalid input.

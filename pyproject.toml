@@ -42,6 +42,9 @@ addopts = """
     --mypy
     --strict
     """
+markers = [
+  "skip_ci: Tests that require access to resource unavailable in GitLab CI",
+]
 
 [tool.mypy]
 strict = true
