@@ -62,4 +62,4 @@ def get_ner_model() -> Language:
     """
     Load the pretrained NER model from the path specified in the settings.
     """
-    return spacy.load(Path(__file__).parents[2] / get_settings().ner_model_path)
+    return spacy.load(Path.cwd() / get_settings().ner_model_path)
