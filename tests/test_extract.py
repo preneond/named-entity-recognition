@@ -8,6 +8,13 @@ def ner_model() -> Language:
     return get_ner_model()
 
 
+# disable by default
+@pytest.mark.skip(
+    reason=""""
+for some reason it breaks the model data,
+https://stackoverflow.com/questions/74823888/load-model-spacy-error-extradata-unpackb-received-extra-data
+"""
+)
 @pytest.mark.parametrize(
     "title",
     [

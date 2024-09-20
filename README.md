@@ -1,4 +1,3 @@
-
 # Named  Entity Recognition
 
 ## Overview
@@ -36,7 +35,7 @@ This project aims to enhance the process of onboarding new products by automatin
 ### Prerequisites
 
 - [Docker](https://www.docker.com/get-started) installed.
-- A working installation of [Python 3.8+](https://www.python.org/).
+- A working installation of [Python 3.11+](https://www.python.org/).
 - [Poetry](https://python-poetry.org/docs/) installed for dependency management.
 
 ### Steps
