@@ -58,7 +58,7 @@ This project aims to enhance the process of onboarding new products by automatin
 
 4. **Run the FastAPI application**:
    ```bash
-   uvicorn src.main:app --reload
+   uvicorn src.named_entity_recognition.main:app --reload
    ```
 
    The API will be available at `http://localhost:8000`.
@@ -96,7 +96,7 @@ The `ds_ner_test_case.csv` file should be pre-processed before training the Name
 The project includes unit tests to verify the functionality of key components and optional integration tests to verify the API routes. You can run the tests using the following command:
 
 ```bash
-pytest test -s
+pytest tests -s
 ```
 
 ## Dockerization
