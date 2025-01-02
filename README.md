@@ -1,34 +1,44 @@
-# Named  Entity Recognition
+# Named Entity Recognition
 
 ## Overview
 
-This project aims to enhance the process of onboarding new products by automating the extraction of product specifications from unstructured data such as product titles and descriptions. The goal is to train a Named Entity Recognition (NER) model capable of identifying specific product attributes like brands, storage capacities (Speicherkapazität), and colors (Farbe). The solution is built using FastAPI for the API implementation, with Poetry for dependency management and packaging.
+This project automates the extraction of product specifications—such as brand names, storage capacities, and colors—from unstructured data (titles, descriptions, etc.). The solution includes a Named Entity Recognition (NER) model built with FastAPI for the API, and Poetry for dependency management and packaging.
 
-## Project Objectives
+## Goals
 
-1. **Seller Experience Enhancement**: Develop a solution that improves the product onboarding process by automatically extracting key product attributes from unstructured data.
-
-2. **Data Transformation**: Convert the provided dataset into a suitable format for training an NER model.
-
-3. **Model Training and Evaluation**: Train and evaluate a model for tagging products with recognized brands, storage capacities, and colors.
-
-4. **Data Extraction Improvement**: Suggest improvements for data extraction and preparation, which was initially done using a naive string matching algorithm.
-
-5. **Dockerization**: Provide a Dockerized version of the solution to ensure easy setup and deployment.
-
-6. **Unit Testing**: Implement unit tests to ensure the reliability of the solution.
+1. **Improve Seller Experience**: Automatically extract key product attributes (brand, storage capacity, color) from unstructured data, reducing manual input.
+2. **Data Transformation**: Convert the provided dataset into a suitable format for NER model training.
+3. **Model Training and Evaluation**: Train and evaluate a model that recognizes product-specific entities.
+4. **Data Extraction Enhancement**: Suggest and implement improvements on the naive string matching approach previously used for data extraction.
+5. **Dockerization**: Provide a Dockerized setup for easy deployment.
+6. **Unit Testing**: Ensure solution reliability through comprehensive unit tests.
 
 ### Optional
-- **Integration Testing**: Implement an integration test for the API route.
+- **Integration Testing**: Include an integration test for the API route, if needed.
 
 ## Files
 
-- **ds_ner_test_case.csv**: The provided dataset containing product data used for model training and testing.
+- **ds_ner_test_case.csv**: Dataset containing product information for model training and testing.
 - **README.md**: Project documentation (this file).
-- **Dockerfile**: Dockerfile to build the project image.
-- **pyproject.toml**: Poetry configuration file for dependency management and project settings.
-- **src/**: Directory containing the source code, including the API and model training logic.
-- **tests/**: Directory containing unit and integration tests.
+- **Dockerfile**: Instructions for building a Docker image of the project.
+- **pyproject.toml**: Poetry configuration for dependencies and project settings.
+- **src/**: Source code directory (FastAPI endpoints, model training logic, etc.).
+- **tests/**: Directory containing unit (and optional integration) tests.
+
+## Setup and Installation
+
+### Prerequisites
+
+- [Docker](https://www.docker.com/get-started) installed.
+- [Python 3.11+](https://www.python.org/) installed.
+- [Poetry](https://python-poetry.org/docs/) for dependency management.
+
+### Steps
+
+1. **Clone the repository**:
+   ```bash
+   git clone <repository_link>
+   cd product-attribute-extraction
 
 ## Setup and Installation
 
